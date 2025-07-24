@@ -31,7 +31,7 @@
         a.button { 
             display: inline-block; 
             padding: 15px 30px; 
-            background-color: #333; 
+            background-color: #000000; 
             color: white; 
             text-decoration: none; 
             border-radius: 8px; 
@@ -39,21 +39,141 @@
             font-weight: bold;
             transition: background-color 0.3s ease;
             margin: 10px;
+            /* New styles for the glowing effect */
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         } 
         
         a.button:hover { 
-            background-color: #555; 
+            background-color: #000000;
+            color: #0f0;
+            text-shadow: 0 0 15px #0f0, 0 0 40px #0f0;
+        }
+
+        /* The glowing effect pseudo-element */
+        a.button::before {
+            content: '';
+            position: absolute;
+            top: var(--y);
+            left: var(--x);
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(#0f0, transparent, transparent);
+            transition: 0.5s, top 0s, left 0s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        a.button:hover::before {
+            opacity: 1;
+        }
+
+        /* Creates the inner background to maintain button appearance */
+        a.button::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            background: #000000;
+            border-radius: 5px;
+            z-index: -1;
+        }
+
+        /* Ensure text stays on top */
+        a.button span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Cursor spark effect */
+        i.spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #0f0;
+            pointer-events: none;
+            animation: spark-animate 2s linear forwards;
+            z-index: 1000;
+        }
+
+        @keyframes spark-animate {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--x), var(--y));
+            }
         }
         
         .image-container {
             margin: 30px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* CSS property for rotating border animation */
+        @property --a {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: true;
+        }
+
+        /* Rotating border container */
+        .image-border {
+            position: relative;
+            display: inline-block;
+            border-radius: 15px;
+            background: repeating-conic-gradient(from var(--a), #0f0 0%, #0021db 10%, #0f0 20%, transparent 20%, transparent 30%);
+            animation: rotate-border 4s linear infinite;
+            padding: 6px;
+        }
+
+        @keyframes rotate-border {
+            0% {
+                --a: 0deg;
+            }
+            100% {
+                --a: 360deg;
+            }
+        }
+
+        /* Second layer for more complex effect */
+        .image-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 15px;
+            background: repeating-conic-gradient(from var(--a), #0021db 0%, #0f0 10%, #0021db 20%, transparent 20%, transparent 30%);
+            animation: rotate-border 4s linear infinite;
+            animation-delay: -1s;
+        }
+
+        /* Inner background to contain the image */
+        .image-border::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            background: #FF5400;
+            border-radius: 10px;
+            z-index: 1;
         }
         
         img {
+            position: relative;
             max-width: 100%;
             height: auto;
+            display: block;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 2;
         }
         
         @media (max-width: 600px) {
@@ -69,14 +189,60 @@
         <p>Check out my YouTube channel for the latest content!</p>
 
         <a href="https://youtube.com/@greaseballgiorgio" class="button" target="_blank">
-            &#127909 Visit My Channel
+            <span>&#127909 Visit My Channel</span>
         </a>
         
         <div class="image-container">
-            <img src="https://i.imgur.com/1ZEXv8u.jpg" alt="GreaseBall Giorgio - Alien Encounter" onerror="this.style.display='none'">
+            <div class="image-border">
+                <img src="https://i.imgur.com/1ZEXv8u.jpg" alt="GreaseBall Giorgio - Alien Encounter" onerror="this.style.display='none'">
+            </div>
         </div>
         
         <p> &#128760 Just a Greasy dude bruh  &#128760 </p>
     </div>
+
+    <script>
+        // Add the mouse tracking effect to the button
+        const button = document.querySelector('.button');
+
+        button.addEventListener('mousemove', (e) => {
+            let x = e.pageX - button.offsetLeft;
+            let y = e.pageY - button.offsetTop;
+            
+            button.style.setProperty('--x', x + 'px');
+            button.style.setProperty('--y', y + 'px');
+        });
+
+        // Cursor spark effect
+        function spark(event) {
+            let i = document.createElement('i');
+            i.className = 'spark';
+            i.style.left = (event.pageX) + 'px';
+            i.style.top = (event.pageY) + 'px';
+            // Random size
+            i.style.scale = `${Math.random() * 2 + 1}`;
+
+            // Random movement direction
+            i.style.setProperty('--x', getRandomTransitionValue());
+            i.style.setProperty('--y', getRandomTransitionValue());
+
+            document.body.appendChild(i);
+
+            setTimeout(() => {
+                if (document.body.contains(i)) {
+                    document.body.removeChild(i);
+                }
+            }, 2000);
+        }
+
+        function getRandomTransitionValue() {
+            return `${Math.random() * 400 - 200}px`;
+        }
+
+        // Only add spark effect on devices that support mouse events (desktop)
+        if (window.matchMedia('(hover: hover)').matches) {
+            document.addEventListener('mousemove', spark);
+        }
+    </script>
 </body>
 </html>
