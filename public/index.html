@@ -1,254 +1,363 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>GreaseBall Giorgio</title>
-<link rel="icon" type="image/png" href="/public/favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/public/favicon/favicon.svg" />
-<link rel="shortcut icon" href="/public/favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/public/favicon/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="gr3asy" />
-<link rel="manifest" href="/public/favicon/site.webmanifest" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grease</title>
     <style>
-        body { 
-            background-color: #FF5400; 
-            color: black; 
-            font-family: Arial, sans-serif; 
-            text-align: center; 
-            padding: 20px; 
+        * {
             margin: 0;
-        } 
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        p {
-            font-size: 1.2em;
-            margin-bottom: 20px;
-        }
-        
-        a.button { 
-            display: inline-block; 
-            padding: 15px 30px; 
-            background-color: #000000; 
-            color: white; 
-            text-decoration: none; 
-            border-radius: 8px; 
-            font-size: 1.1em;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            margin: 10px;
-            /* New styles for the glowing effect */
-            position: relative;
+        html, body {
+            height: 100%;
             overflow: hidden;
-            cursor: pointer;
-        } 
-        
-        a.button:hover { 
-            background-color: #000000;
-            color: #0f0;
-            text-shadow: 0 0 15px #0f0, 0 0 40px #0f0;
         }
 
-        /* The glowing effect pseudo-element */
-        a.button::before {
-            content: '';
-            position: absolute;
-            top: var(--y);
-            left: var(--x);
-            transform: translate(-50%, -50%);
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(#0f0, transparent, transparent);
-            transition: 0.5s, top 0s, left 0s;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        a.button:hover::before {
-            opacity: 1;
-        }
-
-        /* Creates the inner background to maintain button appearance */
-        a.button::after {
-            content: '';
-            position: absolute;
-            inset: 3px;
-            background: #000000;
-            border-radius: 5px;
-            z-index: -1;
-        }
-
-        /* Ensure text stays on top */
-        a.button span {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Cursor spark effect */
-        i.spark {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: #0f0;
-            pointer-events: none;
-            animation: spark-animate 2s linear forwards;
-            z-index: 1000;
-        }
-
-        @keyframes spark-animate {
-            0% {
-                opacity: 1;
-                transform: translate(0, 0);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(var(--x), var(--y));
-            }
-        }
-        
-        .image-container {
-            margin: 30px 0;
+        body {
+            background: #000;
+            color: white;
+            font-family: 'Arial', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-        }
-
-        /* CSS property for rotating border animation */
-        @property --a {
-            syntax: '<angle>';
-            initial-value: 0deg;
-            inherits: true;
-        }
-
-        /* Rotating border container */
-        .image-border {
+            align-items: center;
             position: relative;
-            display: inline-block;
-            border-radius: 15px;
-            background: repeating-conic-gradient(from var(--a), #0f0 0%, #0021db 10%, #0f0 20%, transparent 20%, transparent 30%);
-            animation: rotate-border 4s linear infinite;
-            padding: 6px;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
         }
 
-        @keyframes rotate-border {
-            0% {
-                --a: 0deg;
+        .content {
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            padding: 2rem;
+            max-width: 100%;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #fff;
+            position: relative;
+            animation: glitch 2s infinite, float 4s ease-in-out infinite;
+            text-shadow: 
+                2px 0 #ff00ff,
+                -2px 0 #00ffff,
+                0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
             }
-            100% {
-                --a: 360deg;
+            25% {
+                transform: translateY(-10px) translateX(5px);
+            }
+            50% {
+                transform: translateY(0px) translateX(-5px);
+            }
+            75% {
+                transform: translateY(10px) translateX(2px);
             }
         }
 
-        /* Second layer for more complex effect */
-        .image-border::before {
-            content: '';
+        @keyframes glitch {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% {
+                transform: translate(0);
+                filter: hue-rotate(0deg);
+            }
+            1%, 13% {
+                transform: translate(-2px, 2px);
+                filter: hue-rotate(90deg);
+            }
+            16%, 48% {
+                transform: translate(2px, -2px);
+                filter: hue-rotate(180deg);
+            }
+            51%, 98% {
+                transform: translate(-1px, 1px);
+                filter: hue-rotate(270deg);
+            }
+        }
+
+        .title::before,
+        .title::after {
+            content: 'Grease';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 15px;
-            background: repeating-conic-gradient(from var(--a), #0021db 0%, #0f0 10%, #0021db 20%, transparent 20%, transparent 30%);
-            animation: rotate-border 4s linear infinite;
-            animation-delay: -1s;
+            width: 100%;
+            height: 100%;
         }
 
-        /* Inner background to contain the image */
-        .image-border::after {
+        .title::before {
+            animation: glitch-1 2s infinite, float 4s ease-in-out infinite;
+            color: #ff00ff;
+            z-index: -1;
+        }
+
+        .title::after {
+            animation: glitch-2 2s infinite, float 4s ease-in-out infinite reverse;
+            color: #00ffff;
+            z-index: -2;
+        }
+
+        @keyframes glitch-1 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% {
+                transform: translate(0);
+            }
+            1%, 13% {
+                transform: translate(-2px, 2px);
+            }
+            16%, 48% {
+                transform: translate(2px, -2px);
+            }
+            51%, 98% {
+                transform: translate(-1px, 1px);
+            }
+        }
+
+        @keyframes glitch-2 {
+            0%, 14%, 15%, 49%, 50%, 99%, 100% {
+                transform: translate(0);
+            }
+            1%, 13% {
+                transform: translate(2px, -2px);
+            }
+            16%, 48% {
+                transform: translate(-2px, 2px);
+            }
+            51%, 98% {
+                transform: translate(1px, -1px);
+            }
+        }
+
+        .youtube-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #e55100, #bf360c);
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(191, 54, 12, 0.3);
+            position: relative;
+            overflow: hidden;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            cursor: pointer;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .youtube-btn::before {
             content: '';
             position: absolute;
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
-            background: #FF5400;
-            border-radius: 10px;
-            z-index: 1;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
-        
-        img {
-            position: relative;
-            max-width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 10px;
-            z-index: 2;
+
+        .youtube-btn:hover::before {
+            left: 100%;
         }
-        
-        @media (max-width: 600px) {
-            h1 { font-size: 2em; }
-            p { font-size: 1em; }
-            a.button { padding: 12px 24px; font-size: 1em; }
+
+        .youtube-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(191, 54, 12, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .youtube-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Star styles */
+        .star {
+            position: absolute;
+            background: white;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            .youtube-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+            .youtube-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 320px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            .youtube-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+                min-width: 180px;
+            }
+        }
+
+        /* Landscape orientation on mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .title {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+            }
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        /* Large screens */
+        @media (min-width: 1200px) {
+            .title {
+                font-size: 4rem;
+            }
+            .youtube-btn {
+                font-size: 1.2rem;
+                padding: 18px 36px;
+            }
+        }
+
+        /* Ultra-wide screens */
+        @media (min-width: 1800px) {
+            .title {
+                font-size: 5rem;
+            }
+        }
+
+        /* Touch devices - larger tap targets */
+        @media (hover: none) and (pointer: coarse) {
+            .youtube-btn {
+                min-height: 48px;
+                padding: 16px 32px;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .title {
+                color: #ffffff;
+                text-shadow: 2px 0 #000000, -2px 0 #000000;
+            }
+            .youtube-btn {
+                border: 2px solid #ffffff;
+            }
+        }
+
+        /* Reduced motion for accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            .title {
+                animation: glitch 2s infinite;
+            }
+            .title::before {
+                animation: glitch-1 2s infinite;
+            }
+            .title::after {
+                animation: glitch-2 2s infinite;
+            }
+            .youtube-btn::before {
+                display: none;
+            }
+            .youtube-btn:hover {
+                transform: none;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome GreaseBalls!</h1>
-        <p>Check out my YouTube channel for the latest content!</p>
-
-        <a href="https://youtube.com/@greaseballgiorgio" class="button" target="_blank">
-            <span>&#127909 Visit My Channel</span>
+    <div class="content">
+        <h1 class="title">Grease</h1>
+        <a href="https://youtube.com/@greaseballgiorgio" target="_blank" class="youtube-btn">
+            <span class="youtube-icon">▶</span>
+            Visit My YouTube Channel
         </a>
-        
-        <div class="image-container">
-            <div class="image-border">
-                <img src="https://i.imgur.com/1ZEXv8u.jpg" alt="GreaseBall Giorgio - Alien Encounter" onerror="this.style.display='none'">
-            </div>
-        </div>
-        
-        <p> &#128760 Just a Greasy dude bruh  &#128760 </p>
     </div>
 
     <script>
-        // Add the mouse tracking effect to the button
-        const button = document.querySelector('.button');
-
-        button.addEventListener('mousemove', (e) => {
-            let x = e.pageX - button.offsetLeft;
-            let y = e.pageY - button.offsetTop;
+        function createStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
             
-            button.style.setProperty('--x', x + 'px');
-            button.style.setProperty('--y', y + 'px');
-        });
-
-        // Cursor spark effect
-        function spark(event) {
-            let i = document.createElement('i');
-            i.className = 'spark';
-            i.style.left = (event.pageX) + 'px';
-            i.style.top = (event.pageY) + 'px';
+            // Safer viewport width handling
+            const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1024;
+            star.style.left = Math.random() * viewportWidth + 'px';
+            
+            // Start above screen
+            star.style.top = '-5px';
+            
             // Random size
-            i.style.scale = `${Math.random() * 2 + 1}`;
-
-            // Random movement direction
-            i.style.setProperty('--x', getRandomTransitionValue());
-            i.style.setProperty('--y', getRandomTransitionValue());
-
-            document.body.appendChild(i);
-
-            setTimeout(() => {
-                if (document.body.contains(i)) {
-                    document.body.removeChild(i);
+            const size = Math.random() * 3 + 1;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            
+            // Random opacity
+            star.style.opacity = Math.random() * 0.8 + 0.2;
+            
+            document.body.appendChild(star);
+            
+            // Move star down
+            let position = -5;
+            const speed = Math.random() * 3 + 1;
+            
+            function moveStar() {
+                position += speed;
+                star.style.top = position + 'px';
+                
+                const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 600;
+                
+                if (position < viewportHeight + 10) {
+                    requestAnimationFrame(moveStar);
+                } else {
+                    if (star.parentNode) {
+                        document.body.removeChild(star);
+                    }
                 }
-            }, 2000);
+            }
+            
+            moveStar();
         }
 
-        function getRandomTransitionValue() {
-            return `${Math.random() * 400 - 200}px`;
+        // Create stars every 200ms
+        setInterval(createStar, 200);
+
+        // Create initial stars
+        for (let i = 0; i < 20; i++) {
+            setTimeout(createStar, i * 100);
         }
 
-        // Only add spark effect on devices that support mouse events (desktop)
-        if (window.matchMedia('(hover: hover)').matches) {
-            document.addEventListener('mousemove', spark);
-        }
+        console.log('Stars should be falling now!');
     </script>
 </body>
 </html>
