@@ -1,300 +1,324 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grease</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <title>Super Gr3asy</title>
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
+```
+<!-- SEO -->
+<meta name="description" content="Welcome to Super Gr3asy">
 
-        body {
-            background: #000;
-            color: white;
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+<!-- Open Graph (Discord, iMessage, Slack, Facebook, LinkedIn) -->
+<meta property="og:title" content="Super Gr3asy">
+<meta property="og:description" content="Welcome to Super Gr3asy">
+<meta property="og:image" content="https://gr3asy.com/preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://gr3asy.com">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Super Gr3asy">
 
-        .content {
-            text-align: center;
-            z-index: 10;
-            position: relative;
-            padding: 2rem;
-            max-width: 100%;
-        }
+<!-- Twitter/X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Super Gr3asy">
+<meta name="twitter:description" content="Welcome to Super Gr3asy">
+<meta name="twitter:image" content="https://gr3asy.com/preview.png">
 
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html, body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        background: #000;
+        color: white;
+        font-family: 'Arial', sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+    }
+
+    .content {
+        text-align: center;
+        z-index: 10;
+        position: relative;
+        padding: 2rem;
+        max-width: 100%;
+    }
+
+    .title {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #fff;
+        position: relative;
+        animation: glitch 2s infinite, float 4s ease-in-out infinite;
+        text-shadow: 
+            2px 0 #ff00ff,
+            -2px 0 #00ffff,
+            0 0 20px rgba(255, 255, 255, 0.8);
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px) translateX(0px);
+        }
+        25% {
+            transform: translateY(-10px) translateX(5px);
+        }
+        50% {
+            transform: translateY(0px) translateX(-5px);
+        }
+        75% {
+            transform: translateY(10px) translateX(2px);
+        }
+    }
+
+    @keyframes glitch {
+        0%, 14%, 15%, 49%, 50%, 99%, 100% {
+            transform: translate(0);
+            filter: hue-rotate(0deg);
+        }
+        1%, 13% {
+            transform: translate(-2px, 2px);
+            filter: hue-rotate(90deg);
+        }
+        16%, 48% {
+            transform: translate(2px, -2px);
+            filter: hue-rotate(180deg);
+        }
+        51%, 98% {
+            transform: translate(-1px, 1px);
+            filter: hue-rotate(270deg);
+        }
+    }
+
+    .title::before,
+    .title::after {
+        content: 'Grease';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .title::before {
+        animation: glitch-1 2s infinite, float 4s ease-in-out infinite;
+        color: #ff00ff;
+        z-index: -1;
+    }
+
+    .title::after {
+        animation: glitch-2 2s infinite, float 4s ease-in-out infinite reverse;
+        color: #00ffff;
+        z-index: -2;
+    }
+
+    @keyframes glitch-1 {
+        0%, 14%, 15%, 49%, 50%, 99%, 100% {
+            transform: translate(0);
+        }
+        1%, 13% {
+            transform: translate(-2px, 2px);
+        }
+        16%, 48% {
+            transform: translate(2px, -2px);
+        }
+        51%, 98% {
+            transform: translate(-1px, 1px);
+        }
+    }
+
+    @keyframes glitch-2 {
+        0%, 14%, 15%, 49%, 50%, 99%, 100% {
+            transform: translate(0);
+        }
+        1%, 13% {
+            transform: translate(2px, -2px);
+        }
+        16%, 48% {
+            transform: translate(-2px, 2px);
+        }
+        51%, 98% {
+            transform: translate(1px, -1px);
+        }
+    }
+
+    .youtube-btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background: linear-gradient(135deg, #e55100, #bf360c);
+        color: white;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 50px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(191, 54, 12, 0.3);
+        position: relative;
+        overflow: hidden;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+        cursor: pointer;
+        min-width: 200px;
+        text-align: center;
+    }
+
+    .youtube-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .youtube-btn:hover::before {
+        left: 100%;
+    }
+
+    .youtube-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(191, 54, 12, 0.5);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .youtube-icon {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    /* Star styles */
+    .star {
+        position: absolute;
+        background: white;
+        width: 2px;
+        height: 2px;
+        border-radius: 50%;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
         .title {
-            font-size: 3rem;
-            font-weight: bold;
-            margin-bottom: 2rem;
-            color: #fff;
-            position: relative;
-            animation: glitch 2s infinite, float 4s ease-in-out infinite;
-            text-shadow: 
-                2px 0 #ff00ff,
-                -2px 0 #00ffff,
-                0 0 20px rgba(255, 255, 255, 0.8);
+            font-size: 2.5rem;
         }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px);
-            }
-            25% {
-                transform: translateY(-10px) translateX(5px);
-            }
-            50% {
-                transform: translateY(0px) translateX(-5px);
-            }
-            75% {
-                transform: translateY(10px) translateX(2px);
-            }
-        }
-
-        @keyframes glitch {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-                filter: hue-rotate(0deg);
-            }
-            1%, 13% {
-                transform: translate(-2px, 2px);
-                filter: hue-rotate(90deg);
-            }
-            16%, 48% {
-                transform: translate(2px, -2px);
-                filter: hue-rotate(180deg);
-            }
-            51%, 98% {
-                transform: translate(-1px, 1px);
-                filter: hue-rotate(270deg);
-            }
-        }
-
-        .title::before,
-        .title::after {
-            content: 'Grease';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        .title::before {
-            animation: glitch-1 2s infinite, float 4s ease-in-out infinite;
-            color: #ff00ff;
-            z-index: -1;
-        }
-
-        .title::after {
-            animation: glitch-2 2s infinite, float 4s ease-in-out infinite reverse;
-            color: #00ffff;
-            z-index: -2;
-        }
-
-        @keyframes glitch-1 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-            }
-            1%, 13% {
-                transform: translate(-2px, 2px);
-            }
-            16%, 48% {
-                transform: translate(2px, -2px);
-            }
-            51%, 98% {
-                transform: translate(-1px, 1px);
-            }
-        }
-
-        @keyframes glitch-2 {
-            0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
-            }
-            1%, 13% {
-                transform: translate(2px, -2px);
-            }
-            16%, 48% {
-                transform: translate(-2px, 2px);
-            }
-            51%, 98% {
-                transform: translate(1px, -1px);
-            }
-        }
-
         .youtube-btn {
-            display: inline-block;
-            padding: 15px 30px;
-            background: linear-gradient(135deg, #e55100, #bf360c);
-            color: white;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 50px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(191, 54, 12, 0.3);
-            position: relative;
-            overflow: hidden;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            cursor: pointer;
-            min-width: 200px;
-            text-align: center;
+            padding: 12px 24px;
+            font-size: 1rem;
         }
+        .content {
+            padding: 1rem;
+        }
+    }
 
+    @media (max-width: 480px) {
+        .title {
+            font-size: 2rem;
+        }
+        .youtube-btn {
+            padding: 10px 20px;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Small phones */
+    @media (max-width: 320px) {
+        .title {
+            font-size: 1.8rem;
+        }
+        .youtube-btn {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            min-width: 180px;
+        }
+    }
+
+    /* Landscape orientation on mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+        .title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .content {
+            padding: 1rem;
+        }
+    }
+
+    /* Large screens */
+    @media (min-width: 1200px) {
+        .title {
+            font-size: 4rem;
+        }
+        .youtube-btn {
+            font-size: 1.2rem;
+            padding: 18px 36px;
+        }
+    }
+
+    /* Ultra-wide screens */
+    @media (min-width: 1800px) {
+        .title {
+            font-size: 5rem;
+        }
+    }
+
+    /* Touch devices - larger tap targets */
+    @media (hover: none) and (pointer: coarse) {
+        .youtube-btn {
+            min-height: 48px;
+            padding: 16px 32px;
+        }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+        .title {
+            color: #ffffff;
+            text-shadow: 2px 0 #000000, -2px 0 #000000;
+        }
+        .youtube-btn {
+            border: 2px solid #ffffff;
+        }
+    }
+
+    /* Reduced motion for accessibility */
+    @media (prefers-reduced-motion: reduce) {
+        .title {
+            animation: glitch 2s infinite;
+        }
+        .title::before {
+            animation: glitch-1 2s infinite;
+        }
+        .title::after {
+            animation: glitch-2 2s infinite;
+        }
         .youtube-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s;
+            display: none;
         }
-
-        .youtube-btn:hover::before {
-            left: 100%;
-        }
-
         .youtube-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(191, 54, 12, 0.5);
-            border-color: rgba(255, 255, 255, 0.3);
+            transform: none;
         }
+    }
+</style>
+```
 
-        .youtube-icon {
-            margin-right: 10px;
-            font-size: 1.2em;
-        }
-
-        /* Star styles */
-        .star {
-            position: absolute;
-            background: white;
-            width: 2px;
-            height: 2px;
-            border-radius: 50%;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .title {
-                font-size: 2.5rem;
-            }
-            .youtube-btn {
-                padding: 12px 24px;
-                font-size: 1rem;
-            }
-            .content {
-                padding: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title {
-                font-size: 2rem;
-            }
-            .youtube-btn {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Small phones */
-        @media (max-width: 320px) {
-            .title {
-                font-size: 1.8rem;
-            }
-            .youtube-btn {
-                padding: 8px 16px;
-                font-size: 0.85rem;
-                min-width: 180px;
-            }
-        }
-
-        /* Landscape orientation on mobile */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .title {
-                font-size: 2rem;
-                margin-bottom: 1rem;
-            }
-            .content {
-                padding: 1rem;
-            }
-        }
-
-        /* Large screens */
-        @media (min-width: 1200px) {
-            .title {
-                font-size: 4rem;
-            }
-            .youtube-btn {
-                font-size: 1.2rem;
-                padding: 18px 36px;
-            }
-        }
-
-        /* Ultra-wide screens */
-        @media (min-width: 1800px) {
-            .title {
-                font-size: 5rem;
-            }
-        }
-
-        /* Touch devices - larger tap targets */
-        @media (hover: none) and (pointer: coarse) {
-            .youtube-btn {
-                min-height: 48px;
-                padding: 16px 32px;
-            }
-        }
-
-        /* High contrast mode support */
-        @media (prefers-contrast: high) {
-            .title {
-                color: #ffffff;
-                text-shadow: 2px 0 #000000, -2px 0 #000000;
-            }
-            .youtube-btn {
-                border: 2px solid #ffffff;
-            }
-        }
-
-        /* Reduced motion for accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            .title {
-                animation: glitch 2s infinite;
-            }
-            .title::before {
-                animation: glitch-1 2s infinite;
-            }
-            .title::after {
-                animation: glitch-2 2s infinite;
-            }
-            .youtube-btn::before {
-                display: none;
-            }
-            .youtube-btn:hover {
-                transform: none;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="content">
@@ -305,59 +329,61 @@
         </a>
     </div>
 
-    <script>
-        function createStar() {
-            const star = document.createElement('div');
-            star.className = 'star';
+```
+<script>
+    function createStar() {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        // Safer viewport width handling
+        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1024;
+        star.style.left = Math.random() * viewportWidth + 'px';
+        
+        // Start above screen
+        star.style.top = '-5px';
+        
+        // Random size
+        const size = Math.random() * 3 + 1;
+        star.style.width = size + 'px';
+        star.style.height = size + 'px';
+        
+        // Random opacity
+        star.style.opacity = Math.random() * 0.8 + 0.2;
+        
+        document.body.appendChild(star);
+        
+        // Move star down
+        let position = -5;
+        const speed = Math.random() * 3 + 1;
+        
+        function moveStar() {
+            position += speed;
+            star.style.top = position + 'px';
             
-            // Safer viewport width handling
-            const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1024;
-            star.style.left = Math.random() * viewportWidth + 'px';
+            const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 600;
             
-            // Start above screen
-            star.style.top = '-5px';
-            
-            // Random size
-            const size = Math.random() * 3 + 1;
-            star.style.width = size + 'px';
-            star.style.height = size + 'px';
-            
-            // Random opacity
-            star.style.opacity = Math.random() * 0.8 + 0.2;
-            
-            document.body.appendChild(star);
-            
-            // Move star down
-            let position = -5;
-            const speed = Math.random() * 3 + 1;
-            
-            function moveStar() {
-                position += speed;
-                star.style.top = position + 'px';
-                
-                const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 600;
-                
-                if (position < viewportHeight + 10) {
-                    requestAnimationFrame(moveStar);
-                } else {
-                    if (star.parentNode) {
-                        document.body.removeChild(star);
-                    }
+            if (position < viewportHeight + 10) {
+                requestAnimationFrame(moveStar);
+            } else {
+                if (star.parentNode) {
+                    document.body.removeChild(star);
                 }
             }
-            
-            moveStar();
         }
+        
+        moveStar();
+    }
 
-        // Create stars every 200ms
-        setInterval(createStar, 200);
+    // Create stars every 200ms
+    setInterval(createStar, 200);
 
-        // Create initial stars
-        for (let i = 0; i < 20; i++) {
-            setTimeout(createStar, i * 100);
-        }
+    // Create initial stars
+    for (let i = 0; i < 20; i++) {
+        setTimeout(createStar, i * 100);
+    }
 
-        console.log('Stars should be falling now!');
-    </script>
+</script>
+```
+
 </body>
 </html>
