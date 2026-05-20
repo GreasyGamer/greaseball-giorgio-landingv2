@@ -1,396 +1,888 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Super Gr3asy</title>
 
-```
-<!-- SEO -->
-<meta name="description" content="Welcome to Super Gr3asy">
+    <meta name="description" content="Welcome to Super Gr3asy">
+    <meta property="og:title" content="Super Gr3asy">
+    <meta property="og:description" content="this is gr3asy">
+    <meta property="og:image" content="https://gr3asy.com/preview.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://gr3asy.com">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Super Gr3asy">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Super Gr3asy">
+    <meta name="twitter:description" content="this is gr3asy">
+    <meta name="twitter:image" content="https://gr3asy.com/preview.png">
 
-<!-- Open Graph (Discord, iMessage, Slack, Facebook, LinkedIn) -->
-<meta property="og:title" content="Super Gr3asy">
-<meta property="og:description" content="this is gr3asy">
-<meta property="og:image" content="https://gr3asy.com/preview.png">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta property="og:url" content="https://gr3asy.com">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="Super Gr3asy">
+    <link rel="icon" href="/favicon/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="/favicon/site.webmanifest">
 
-<!-- Twitter/X -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Super Gr3asy">
-<meta name="twitter:description" content="this is gr3asy">
-<meta name="twitter:image" content="https://gr3asy.com/preview.png">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet"></noscript>
 
-<!-- Favicon -->
-<link rel="icon" href="/favicon/favicon.ico">
-<link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
-<link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
-<link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
-<link rel="manifest" href="/favicon/site.webmanifest">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    html, body {
-        height: 100%;
-        overflow: hidden;
-    }
-
-    body {
-        background: #000;
-        color: white;
-        font-family: 'Arial', sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-    }
-
-    .content {
-        text-align: center;
-        z-index: 10;
-        position: relative;
-        padding: 2rem;
-        max-width: 100%;
-    }
-
-    .title {
-        font-size: 3rem;
-        font-weight: bold;
-        margin-bottom: 2rem;
-        color: #fff;
-        position: relative;
-        animation: glitch 2s infinite, float 4s ease-in-out infinite;
-        text-shadow: 
-            2px 0 #ff00ff,
-            -2px 0 #00ffff,
-            0 0 20px rgba(255, 255, 255, 0.8);
-    }
-
-    @keyframes float {
-        0%, 100% {
-            transform: translateY(0px) translateX(0px);
+        html {
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #333 #000;
         }
-        25% {
-            transform: translateY(-10px) translateX(5px);
-        }
-        50% {
-            transform: translateY(0px) translateX(-5px);
-        }
-        75% {
-            transform: translateY(10px) translateX(2px);
-        }
-    }
 
-    @keyframes glitch {
-        0%, 14%, 15%, 49%, 50%, 99%, 100% {
-            transform: translate(0);
-            filter: hue-rotate(0deg);
+        body {
+            min-height: 100%;
+            background: #000;
+            color: white;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            -webkit-text-size-adjust: 100%;
         }
-        1%, 13% {
-            transform: translate(-2px, 2px);
-            filter: hue-rotate(90deg);
+
+        /* ── Stars ── */
+        .star {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
         }
-        16%, 48% {
-            transform: translate(2px, -2px);
-            filter: hue-rotate(180deg);
+
+        /* ── Hero section ── */
+        .hero {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            text-align: center;
+            z-index: 10;
+            position: relative;
         }
-        51%, 98% {
-            transform: translate(-1px, 1px);
-            filter: hue-rotate(270deg);
-        }
-    }
 
-    .title::before,
-    .title::after {
-        content: 'Grease';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    .title::before {
-        animation: glitch-1 2s infinite, float 4s ease-in-out infinite;
-        color: #ff00ff;
-        z-index: -1;
-    }
-
-    .title::after {
-        animation: glitch-2 2s infinite, float 4s ease-in-out infinite reverse;
-        color: #00ffff;
-        z-index: -2;
-    }
-
-    @keyframes glitch-1 {
-        0%, 14%, 15%, 49%, 50%, 99%, 100% {
-            transform: translate(0);
-        }
-        1%, 13% {
-            transform: translate(-2px, 2px);
-        }
-        16%, 48% {
-            transform: translate(2px, -2px);
-        }
-        51%, 98% {
-            transform: translate(-1px, 1px);
-        }
-    }
-
-    @keyframes glitch-2 {
-        0%, 14%, 15%, 49%, 50%, 99%, 100% {
-            transform: translate(0);
-        }
-        1%, 13% {
-            transform: translate(2px, -2px);
-        }
-        16%, 48% {
-            transform: translate(-2px, 2px);
-        }
-        51%, 98% {
-            transform: translate(1px, -1px);
-        }
-    }
-
-    .youtube-btn {
-        display: inline-block;
-        padding: 15px 30px;
-        background: linear-gradient(135deg, #e55100, #bf360c);
-        color: white;
-        text-decoration: none;
-        font-size: 1.1rem;
-        font-weight: bold;
-        border-radius: 50px;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 20px rgba(191, 54, 12, 0.3);
-        position: relative;
-        overflow: hidden;
-        -webkit-tap-highlight-color: transparent;
-        touch-action: manipulation;
-        cursor: pointer;
-        min-width: 200px;
-        text-align: center;
-    }
-
-    .youtube-btn::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s;
-    }
-
-    .youtube-btn:hover::before {
-        left: 100%;
-    }
-
-    .youtube-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(191, 54, 12, 0.5);
-        border-color: rgba(255, 255, 255, 0.3);
-    }
-
-    .youtube-icon {
-        margin-right: 10px;
-        font-size: 1.2em;
-    }
-
-    /* Star styles */
-    .star {
-        position: absolute;
-        background: white;
-        width: 2px;
-        height: 2px;
-        border-radius: 50%;
-    }
-
-    /* Mobile responsive */
-    @media (max-width: 768px) {
         .title {
-            font-size: 2.5rem;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            color: #fff;
+            position: relative;
+            animation: glitch 2s infinite, float 4s ease-in-out infinite;
+            will-change: transform, filter;
+            text-shadow:
+                2px 0 #ff00ff,
+                -2px 0 #00ffff,
+                0 0 20px rgba(255,255,255,0.8);
         }
-        .youtube-btn {
-            padding: 12px 24px;
-            font-size: 1rem;
-        }
-        .content {
-            padding: 1rem;
-        }
-    }
 
-    @media (max-width: 480px) {
-        .title {
-            font-size: 2rem;
+        .title::before, .title::after {
+            content: 'Grease';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s;
         }
-        .youtube-btn {
-            padding: 10px 20px;
+        .title.typed::before,
+        .title.typed::after { opacity: 1; }
+        .title::before { animation: glitch-1 2s infinite, float 4s ease-in-out infinite; color: #ff00ff; z-index: -1; will-change: transform; }
+        .title::after  { animation: glitch-2 2s infinite, float 4s ease-in-out infinite reverse; color: #00ffff; z-index: -2; will-change: transform; }
+
+        #cheatNotif {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
             font-size: 0.9rem;
+            color: #00ffcc;
+            background: rgba(0,0,0,0.85);
+            border: 1px solid #00ffcc55;
+            padding: 10px 24px;
+            border-radius: 4px;
+            letter-spacing: 0.15em;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
         }
-    }
+        #cheatNotif.show { opacity: 1; }
 
-    /* Small phones */
-    @media (max-width: 320px) {
-        .title {
-            font-size: 1.8rem;
+        @keyframes float {
+            0%,100% { transform: translateY(0) translateX(0); }
+            25%      { transform: translateY(-10px) translateX(5px); }
+            50%      { transform: translateY(0) translateX(-5px); }
+            75%      { transform: translateY(10px) translateX(2px); }
         }
-        .youtube-btn {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            min-width: 180px;
-        }
-    }
 
-    /* Landscape orientation on mobile */
-    @media (max-height: 500px) and (orientation: landscape) {
-        .title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+        @keyframes glitch {
+            0%,14%,15%,49%,50%,99%,100% { transform:translate(0);filter:hue-rotate(0deg); }
+            1%,13%   { transform:translate(-2px,2px);filter:hue-rotate(90deg); }
+            16%,48%  { transform:translate(2px,-2px);filter:hue-rotate(180deg); }
+            51%,98%  { transform:translate(-1px,1px);filter:hue-rotate(270deg); }
         }
-        .content {
-            padding: 1rem;
-        }
-    }
 
-    /* Large screens */
-    @media (min-width: 1200px) {
-        .title {
-            font-size: 4rem;
+        @keyframes glitch-1 {
+            0%,14%,15%,49%,50%,99%,100%{transform:translate(0);}
+            1%,13%{transform:translate(-2px,2px);}16%,48%{transform:translate(2px,-2px);}51%,98%{transform:translate(-1px,1px);}
         }
-        .youtube-btn {
-            font-size: 1.2rem;
-            padding: 18px 36px;
+        @keyframes glitch-2 {
+            0%,14%,15%,49%,50%,99%,100%{transform:translate(0);}
+            1%,13%{transform:translate(2px,-2px);}16%,48%{transform:translate(-2px,2px);}51%,98%{transform:translate(1px,-1px);}
         }
-    }
 
-    /* Ultra-wide screens */
-    @media (min-width: 1800px) {
-        .title {
-            font-size: 5rem;
-        }
-    }
+        /* Typing cursor — toggled via JS class */
+        .title-cursor { border-right: 3px solid #fff; }
 
-    /* Touch devices - larger tap targets */
-    @media (hover: none) and (pointer: coarse) {
-        .youtube-btn {
-            min-height: 48px;
-            padding: 16px 32px;
-        }
-    }
+        /* ── Buttons ── */
+        .btn-row { display:flex; flex-direction:column; align-items:center; gap:14px; }
 
-    /* High contrast mode support */
-    @media (prefers-contrast: high) {
-        .title {
-            color: #ffffff;
-            text-shadow: 2px 0 #000000, -2px 0 #000000;
+        .btn {
+            display:inline-flex; align-items:center; justify-content:center;
+            padding:15px 30px; color:white; text-decoration:none;
+            font-size:1.1rem; font-weight:bold; border-radius:50px;
+            border:2px solid transparent; transition:transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position:relative;
+            -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+            cursor:pointer; min-width:240px; gap:10px;
+            z-index: 1;
         }
-        .youtube-btn {
-            border: 2px solid #ffffff;
+        .btn-shimmer {
+            position:absolute; inset:0; border-radius:50px; overflow:hidden; pointer-events:none;
         }
-    }
+        .btn-shimmer::before {
+            content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
+            background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent);
+            transition:left 0.5s;
+        }
+        .btn:hover .btn-shimmer::before { left:100%; }
+        .btn:hover { transform:translateY(-3px); border-color:rgba(255,255,255,0.3); z-index:2; }
 
-    /* Reduced motion for accessibility */
-    @media (prefers-reduced-motion: reduce) {
-        .title {
-            animation: glitch 2s infinite;
+        .btn-youtube { background:linear-gradient(135deg,#e55100,#bf360c); box-shadow:0 5px 20px rgba(191,54,12,0.3); }
+        .btn-youtube:hover { box-shadow:0 10px 30px rgba(191,54,12,0.5); }
+        .btn-github  { background:linear-gradient(135deg,#333,#111); box-shadow:0 5px 20px rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.15); }
+        .btn-github:hover { box-shadow:0 10px 30px rgba(255,255,255,0.15); }
+        .btn-discord { background:linear-gradient(135deg,#5865f2,#3d4de0); box-shadow:0 5px 20px rgba(88,101,242,0.3); }
+        .btn-discord:hover { box-shadow:0 10px 30px rgba(88,101,242,0.5); }
+
+        .btn-icon { width:1.2em; height:1.2em; flex-shrink:0; fill:white; }
+
+        /* ── Pong section ── */
+        .pong-section {
+            width: 100%;
+            max-width: 700px;
+            padding: 0 1rem 4rem;
+            z-index: 10;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .title::before {
-            animation: glitch-1 2s infinite;
+
+        /* Launch button */
+        .pong-launch-btn {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.95rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #00ffcc;
+            background: transparent;
+            border: 1px solid #00ffcc44;
+            border-radius: 4px;
+            padding: 10px 28px;
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
         }
-        .title::after {
-            animation: glitch-2 2s infinite;
+        .pong-launch-btn::before {
+            content: '';
+            position: absolute; top:0; left:-100%; width:100%; height:100%;
+            background: linear-gradient(90deg, transparent, rgba(0,255,204,0.1), transparent);
+            transition: left 0.4s;
         }
-        .youtube-btn::before {
+        .pong-launch-btn:hover::before { left: 100%; }
+        .pong-launch-btn:hover {
+            color: #fff;
+            border-color: #00ffcc;
+            box-shadow: 0 0 12px rgba(0,255,204,0.3);
+        }
+
+        /* CRT monitor wrapper */
+        .crt-monitor {
             display: none;
+            width: 100%;
+            max-width: 640px;
+            background: #0a0a0a;
+            border: 2px solid #1a1a1a;
+            border-radius: 12px;
+            padding: 20px 20px 16px;
+            box-shadow:
+                0 0 0 1px #111,
+                0 0 30px rgba(0,255,204,0.05),
+                inset 0 0 40px rgba(0,0,0,0.8);
+            position: relative;
+            margin-top: 18px;
         }
-        .youtube-btn:hover {
-            transform: none;
-        }
-    }
-</style>
-```
+        .crt-monitor.visible { display: flex; flex-direction: column; align-items: center; gap: 12px; }
 
+        /* Fake monitor bezel top bar */
+        .monitor-bar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.7rem;
+            color: #444;
+            letter-spacing: 0.1em;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        .monitor-dot { width:8px; height:8px; border-radius:50%; background:#222; display:inline-block; margin-right:4px; }
+        .monitor-dot.green { background:#00ffcc; box-shadow:0 0 6px #00ffcc; }
+
+        /* Canvas wrapper with CRT effects */
+        .canvas-wrap {
+            position: relative;
+            width: 100%;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #pongCanvas {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+            border-radius: 4px;
+        }
+
+        /* CRT scanline overlay */
+        .canvas-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,0,0,0.15) 2px,
+                rgba(0,0,0,0.15) 4px
+            );
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        /* Subtle CRT screen glow vignette */
+        .canvas-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
+            pointer-events: none;
+            z-index: 1;
+            border-radius: 4px;
+        }
+
+        /* Score & controls row */
+        .pong-hud {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72rem;
+            color: #555;
+            letter-spacing: 0.08em;
+            padding-top: 4px;
+        }
+        .pong-hud .hint { color: #333; }
+        #scoreDisplay { color: #00ffcc; font-size: 0.85rem; }
+
+        /* ── Touch controls ── */
+        .touch-controls {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            gap: 16px;
+            padding-top: 8px;
+        }
+        @media (hover: none) and (pointer: coarse) {
+            .touch-controls { display: flex; }
+            .pong-hud .hint { display: none; }
+        }
+        /* Shared base for all touch control buttons */
+        .touch-btn-base {
+            font-family: 'Share Tech Mono', monospace;
+            color: #00ffcc;
+            background: rgba(0,255,204,0.05);
+            border: 1px solid rgba(0,255,204,0.25);
+            border-radius: 6px;
+            height: 52px;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .touch-btn {
+            font-size: 1.4rem;
+            width: 72px;
+            touch-action: none;
+            transition: background 0.1s, box-shadow 0.1s;
+        }
+        .touch-btn:active, .touch-btn.pressed {
+            background: rgba(0,255,204,0.15);
+            box-shadow: 0 0 10px rgba(0,255,204,0.3);
+        }
+        .touch-start-btn {
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            padding: 0 20px;
+            touch-action: manipulation;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .title { font-size: 2.5rem; }
+            .btn { padding:12px 24px; font-size:1rem; }
+        }
+        @media (max-width: 480px) {
+            .title { font-size: 2rem; }
+            .btn { padding:10px 20px; font-size:0.9rem; }
+        }
+        @media (max-width: 320px) {
+            .title { font-size:1.8rem; }
+            .btn { padding:8px 16px; font-size:0.85rem; min-width:180px; }
+        }
+        @media (min-width:1200px) {
+            .title { font-size:4rem; }
+            .btn { font-size:1.2rem; padding:18px 36px; }
+        }
+        @media (min-width:1800px) { .title { font-size:5rem; } }
+        @media (hover:none) and (pointer:coarse) { .btn { min-height:48px; padding:16px 32px; } }
+        @media (prefers-contrast:high) {
+            .title { color:#fff; text-shadow:2px 0 #000,-2px 0 #000; }
+            .btn { border:2px solid #fff; }
+        }
+        @media (prefers-reduced-motion:reduce) {
+            .title,
+            .title::before,
+            .title::after { animation: none; }
+            .btn-shimmer { display:none; }
+            .btn:hover { transform:none; }
+        }
+    </style>
 </head>
 <body>
-    <div class="content">
+
+    <!-- ── Hero ── -->
+    <div class="hero">
         <h1 class="title">Grease</h1>
-        <a href="https://youtube.com/@greaseballgiorgio" target="_blank" class="youtube-btn">
-            <span class="youtube-icon">▶</span>
-            Visit My YouTube Channel
-        </a>
+
+        <div class="btn-row">
+            <a href="https://youtube.com/@greaseballgiorgio" target="_blank" rel="noopener noreferrer" class="btn btn-youtube">
+                <div class="btn-shimmer"></div>
+                <svg class="btn-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                YouTube
+            </a>
+            <a href="https://github.com/GreasyGamer" target="_blank" rel="noopener noreferrer" class="btn btn-github">
+                <div class="btn-shimmer"></div>
+                <svg class="btn-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                GitHub
+            </a>
+            <a href="https://discord.gg/8RPEA3avX" target="_blank" rel="noopener noreferrer" class="btn btn-discord">
+                <div class="btn-shimmer"></div>
+                <svg class="btn-icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                Discord
+            </a>
+        </div>
     </div>
 
-```
-<script>
-    function createStar() {
-        const star = document.createElement('div');
-        star.className = 'star';
-        
-        // Safer viewport width handling
-        const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 1024;
-        star.style.left = Math.random() * viewportWidth + 'px';
-        
-        // Start above screen
-        star.style.top = '-5px';
-        
-        // Random size
-        const size = Math.random() * 3 + 1;
-        star.style.width = size + 'px';
-        star.style.height = size + 'px';
-        
-        // Random opacity
-        star.style.opacity = Math.random() * 0.8 + 0.2;
-        
-        document.body.appendChild(star);
-        
-        // Move star down
-        let position = -5;
-        const speed = Math.random() * 3 + 1;
-        
-        function moveStar() {
-            position += speed;
-            star.style.top = position + 'px';
-            
-            const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 600;
-            
-            if (position < viewportHeight + 10) {
-                requestAnimationFrame(moveStar);
-            } else {
-                if (star.parentNode) {
-                    document.body.removeChild(star);
+    <!-- ── Pong Section ── -->
+    <div class="pong-section">
+        <button type="button" class="pong-launch-btn" id="launchBtn" onclick="togglePong()">▶ PLAY PONG</button>
+
+        <div class="crt-monitor" id="crtMonitor">
+            <div class="monitor-bar">
+                <span><span class="monitor-dot green"></span>GR3ASY_PONG v1.0</span>
+                <span id="monitorStatus">READY</span>
+                <span>W/S TO MOVE</span>
+            </div>
+            <div class="canvas-wrap">
+                <canvas id="pongCanvas" width="600" height="360"></canvas>
+            </div>
+            <div class="pong-hud">
+                <span id="scoreDisplay"></span>
+                <span class="hint" id="gameHint">Press SPACE to start</span>
+            </div>
+            <div class="touch-controls" id="touchControls">
+                <button class="touch-btn-base touch-btn" id="btnUp">▲</button>
+                <button class="touch-btn-base touch-start-btn" id="btnStart">START</button>
+                <button class="touch-btn-base touch-btn" id="btnDown">▼</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cheatNotif">✓ PAINKILLER ACTIVATED</div>
+
+    <script>
+        /* ───────── Typing effect ───────── */
+        (function() {
+            const titleEl = document.querySelector('.title');
+            const word = 'Grease';
+            titleEl.textContent = '';
+            let i = 0;
+            // blinking cursor while typing
+            titleEl.classList.add('title-cursor');
+            function type() {
+                if (i <= word.length) {
+                    titleEl.textContent = word.slice(0, i);
+                    i++;
+                    setTimeout(type, i === 1 ? 400 : 120);
+                } else {
+                    // done typing — remove cursor, enable glitch pseudos
+                    setTimeout(() => {
+                        titleEl.classList.remove('title-cursor');
+                        titleEl.classList.add('typed');
+                    }, 500);
                 }
             }
+            setTimeout(type, 600);
+        })();
+
+        /* ───────── Stars ───────── */
+        let cachedVW = window.innerWidth || 1024;
+        let cachedVH = window.innerHeight || 600;
+        window.addEventListener('resize', () => {
+            cachedVW = window.innerWidth || 1024;
+            cachedVH = window.innerHeight || 600;
+        });
+
+        function createStar() {
+            if (document.visibilityState === 'hidden') return;
+            const star = document.createElement('div');
+            const size = Math.random() * 3 + 1;
+            star.className = 'star';
+            star.style.cssText = `left:${Math.random() * cachedVW}px;top:-5px;width:${size}px;height:${size}px;opacity:${(Math.random() * 0.8 + 0.2).toFixed(2)};`;
+            document.body.appendChild(star);
+            let pos = -5;
+            const speed = Math.random() * 3 + 1;
+            function move() {
+                pos += speed;
+                star.style.top = pos + 'px';
+                if (pos < cachedVH + 10) requestAnimationFrame(move);
+                else star.remove();
+            }
+            move();
         }
-        
-        moveStar();
-    }
+        const _starInterval = setInterval(createStar, 200);
+        for (let i = 0; i < 20; i++) setTimeout(createStar, i * 100);
 
-    // Create stars every 200ms
-    setInterval(createStar, 200);
+        /* ───────── PAINKILLER easter egg ───────── */
+        (function() {
+            const CODE = 'PAINKILLER';
+            let buffer = '';
+            let eggActive = false;
+            let eggTimeout = null;
+            let flashInterval = null;
 
-    // Create initial stars
-    for (let i = 0; i < 20; i++) {
-        setTimeout(createStar, i * 100);
-    }
+            document.addEventListener('keydown', e => {
+                if (e.key.length !== 1) return;
+                buffer = (buffer + e.key.toUpperCase()).slice(-CODE.length);
+                if (buffer === CODE) triggerEgg();
+            });
 
-</script>
-```
+            function triggerEgg() {
+                if (eggActive) return;
+                eggActive = true;
+                buffer = '';
 
+                // Clear any previous timeout that may still be pending
+                if (eggTimeout) { clearTimeout(eggTimeout); eggTimeout = null; }
+
+                // Show notification
+                const notif = document.getElementById('cheatNotif');
+                notif.classList.add('show');
+                setTimeout(() => notif.classList.remove('show'), 3000);
+
+                // Chaos: rapid hue-rotate + shake on body
+                const body = document.body;
+                body.style.transition = 'filter 0.05s';
+                let tick = 0;
+                const colors = ['#ff00ff','#00ffff','#ffff00','#ff0044','#00ff88'];
+
+                flashInterval = setInterval(() => {
+                    tick++;
+                    const hue = (tick * 37) % 360;
+                    body.style.filter = `hue-rotate(${hue}deg) brightness(${1 + Math.random()}) contrast(${1 + Math.random() * 0.5})`;
+                    body.style.transform = `translate(${(Math.random()-0.5)*8}px, ${(Math.random()-0.5)*8}px)`;
+
+                    // spawn glitch bars
+                    const bar = document.createElement('div');
+                    bar.style.cssText = `
+                        position:fixed;
+                        left:0; width:100%;
+                        height:${Math.random()*6+1}px;
+                        top:${Math.random()*100}%;
+                        background:${colors[Math.floor(Math.random()*colors.length)]};
+                        opacity:${Math.random()*0.6+0.2};
+                        pointer-events:none;
+                        z-index:9998;
+                    `;
+                    document.body.appendChild(bar);
+                    setTimeout(() => bar.remove(), 80);
+                }, 50);
+
+                // Stop after 3 seconds, reset cleanly
+                eggTimeout = setTimeout(() => {
+                    clearInterval(flashInterval);
+                    body.style.filter = '';
+                    body.style.transform = '';
+                    body.style.transition = '';
+                    eggActive = false;
+                }, 3000);
+            }
+        })();
+
+        /* ───────── Pong ───────── */
+        let pongOpen = false;
+        let animId = null;
+
+        let pongListenersRegistered = false;
+
+        function togglePong() {
+            pongOpen = !pongOpen;
+            const monitor = document.getElementById('crtMonitor');
+            const btn = document.getElementById('launchBtn');
+            if (pongOpen) {
+                monitor.classList.add('visible');
+                btn.textContent = '▼ CLOSE PONG';
+                initPong();
+            } else {
+                monitor.classList.remove('visible');
+                btn.textContent = '▶ PLAY PONG';
+                if (animId) { cancelAnimationFrame(animId); animId = null; }
+            }
+        }
+
+        function initPong() {
+            const canvas = document.getElementById('pongCanvas');
+            // keys declared at initPong scope so update() always sees the live object
+            // (pongListenersRegistered guard below means listeners are only attached once,
+            //  but they close over this same `keys` reference every time)
+            if (!window._pongKeys) window._pongKeys = {};
+            const keys = window._pongKeys;
+            const ctx = canvas.getContext('2d');
+            ctx.textAlign = 'center'; // set once; drawText never changes it
+
+            const W = 600, H = 360;
+            const PAD_W = 10, PAD_H = 70, PAD_SPEED = 5;
+            const BALL_SIZE = 8;
+            const WIN_SCORE = 7;
+
+            // Phosphor green palette
+            const C = {
+                bg:    '#050e09',
+                dim:   '#0a1a10',
+                glow:  '#00ffcc',
+                white: '#ccffe8',
+                mid:   '#1a4030',
+                text:  '#00ffcc',
+            };
+            C.score = C.text;
+
+            // Cache mobile detection; only attach the change listener once
+            const mobileQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
+            let isMobile = mobileQuery.matches;
+            if (!mobileQuery._pongListenerAttached) {
+                mobileQuery._pongListenerAttached = true;
+                mobileQuery.addEventListener('change', e => { isMobile = e.matches; });
+            }
+
+            let state = 'idle'; // idle | playing | paused | over
+            let playerScore = 0, aiScore = 0;
+
+            let player = { x: 20, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
+            let ai     = { x: W - 20 - PAD_W, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
+
+            function resetBall(dir = 1) {
+                const angle = (Math.random() * 60 - 30) * Math.PI / 180;
+                const speed = 3.0;
+                return {
+                    x: W/2, y: H/2,
+                    vx: Math.cos(angle) * speed * dir,
+                    vy: Math.sin(angle) * speed,
+                    trail: []
+                };
+            }
+
+            let ball = resetBall();
+
+            // Input — keys at initPong scope so update() always sees the live object
+            if (!pongListenersRegistered) {
+                pongListenersRegistered = true;
+
+            document.addEventListener('keydown', e => {
+                keys[e.key] = true;
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    if (state === 'idle' || state === 'over') startGame();
+                }
+            });
+            document.addEventListener('keyup', e => { keys[e.key] = false; });
+
+            // Touch button controls
+            const btnUp   = document.getElementById('btnUp');
+            const btnDown = document.getElementById('btnDown');
+            const btnStart = document.getElementById('btnStart');
+
+            function holdStart(key) { keys[key] = true; }
+            function holdEnd(key)   { keys[key] = false; }
+
+            ['touchstart','mousedown'].forEach(ev => {
+                btnUp.addEventListener(ev,   e => { e.preventDefault(); holdStart('ArrowUp');   btnUp.classList.add('pressed'); },   { passive: false });
+                btnDown.addEventListener(ev, e => { e.preventDefault(); holdStart('ArrowDown'); btnDown.classList.add('pressed'); }, { passive: false });
+            });
+            ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev => {
+                btnUp.addEventListener(ev,   () => { holdEnd('ArrowUp');   btnUp.classList.remove('pressed'); });
+                btnDown.addEventListener(ev, () => { holdEnd('ArrowDown'); btnDown.classList.remove('pressed'); });
+            });
+            btnStart.addEventListener('touchstart', e => { e.preventDefault(); if (state === 'idle' || state === 'over') startGame(); }, { passive: false });
+            btnStart.addEventListener('click', () => { if (state === 'idle' || state === 'over') startGame(); });
+
+            // Canvas touch-drag: drag finger to move paddle
+            let touchActive = false;
+            canvas.addEventListener('touchstart', e => {
+                e.preventDefault();
+                touchActive = true;
+                if (state === 'idle' || state === 'over') startGame();
+            }, { passive: false });
+            canvas.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (!touchActive || state !== 'playing') return;
+                const rect = canvas.getBoundingClientRect();
+                const scaleY = H / rect.height;
+                const touchY = (e.touches[0].clientY - rect.top) * scaleY;
+                player.y = Math.max(0, Math.min(H - PAD_H, touchY - PAD_H / 2));
+            }, { passive: false });
+            canvas.addEventListener('touchend', () => { touchActive = false; });
+
+            } // end pongListenersRegistered
+
+            function startGame() {
+                playerScore = 0; aiScore = 0;
+                player.y = H/2 - PAD_H/2;
+                ai.y     = H/2 - PAD_H/2;
+                ball = resetBall(Math.random() > 0.5 ? 1 : -1);
+                state = 'playing';
+                updateHUD();
+            }
+
+            // Cache HUD refs once — updateHUD is called on every score event
+            const _hudScore  = document.getElementById('scoreDisplay');
+            const _hudHint   = document.getElementById('gameHint');
+            const _hudStatus = document.getElementById('monitorStatus');
+
+            function updateHUD() {
+                _hudScore.textContent = `YOU: ${playerScore}  |  AI: ${aiScore}`;
+                if (state === 'idle')         { _hudHint.textContent = 'Press SPACE to start'; _hudStatus.textContent = 'READY'; }
+                else if (state === 'playing') { _hudHint.textContent = 'W / S to move';        _hudStatus.textContent = 'LIVE'; }
+                else if (state === 'over')    { _hudHint.textContent = 'Press SPACE to restart'; _hudStatus.textContent = 'GAME OVER'; }
+            }
+
+            function drawGlowRect(x, y, w, h, color, blur=8) {
+                ctx.save();
+                ctx.shadowColor = color;
+                ctx.shadowBlur  = blur;
+                ctx.fillStyle   = color;
+                ctx.fillRect(x, y, w, h);
+                ctx.restore();
+            }
+
+            function drawBall(b) {
+                // Trail
+                b.trail.forEach((t, i) => {
+                    const alpha = (i / b.trail.length) * 0.4;
+                    ctx.save();
+                    ctx.globalAlpha = alpha;
+                    ctx.shadowColor = C.glow;
+                    ctx.shadowBlur  = 6;
+                    ctx.fillStyle   = C.glow;
+                    const s = BALL_SIZE * (i / b.trail.length);
+                    ctx.fillRect(t.x - s/2, t.y - s/2, s, s);
+                    ctx.restore();
+                });
+                drawGlowRect(b.x - BALL_SIZE/2, b.y - BALL_SIZE/2, BALL_SIZE, BALL_SIZE, C.glow, 14);
+            }
+
+            // Paddle collision helper — pure: takes ball explicitly
+            function hitPad(b, pad) {
+                return b.x - BALL_SIZE/2 < pad.x + pad.w &&
+                       b.x + BALL_SIZE/2 > pad.x &&
+                       b.y > pad.y && b.y < pad.y + pad.h;
+            }
+
+            // AI difficulty: track ball with lag + small error
+            let aiTarget = H/2;
+            const AI_SPEED = 2.8;
+
+            function update() {
+                if (state !== 'playing') return;
+
+                // Player movement
+                if ((keys['w'] || keys['W'] || keys['ArrowUp'])    && player.y > 2)          player.y -= PAD_SPEED;
+                if ((keys['s'] || keys['S'] || keys['ArrowDown'])  && player.y < H - PAD_H - 2) player.y += PAD_SPEED;
+
+                // AI tracking
+                if (ball.vx > 0) {
+                    aiTarget = ball.y - PAD_H / 2 + (Math.random() - 0.5) * 20;
+                } else {
+                    aiTarget = H/2 - PAD_H/2;
+                }
+                const aiCenter = ai.y + PAD_H/2;
+                const targetCenter = aiTarget + PAD_H/2;
+                if (aiCenter < targetCenter - 2) ai.y = Math.min(ai.y + AI_SPEED, H - PAD_H);
+                if (aiCenter > targetCenter + 2) ai.y = Math.max(ai.y - AI_SPEED, 0);
+
+                // Ball trail
+                ball.trail.push({ x: ball.x, y: ball.y });
+                if (ball.trail.length > 8) ball.trail.shift();
+
+                // Ball movement
+                ball.x += ball.vx;
+                ball.y += ball.vy;
+
+                // Top/bottom bounce
+                if (ball.y - BALL_SIZE/2 <= 0) { ball.y = BALL_SIZE/2; ball.vy *= -1; }
+                if (ball.y + BALL_SIZE/2 >= H)  { ball.y = H - BALL_SIZE/2; ball.vy *= -1; }
+
+                if (hitPad(ball, player)) {
+                    ball.x = player.x + player.w + BALL_SIZE/2;
+                    const rel = (ball.y - (player.y + PAD_H/2)) / (PAD_H/2);
+                    const angle = rel * 60 * Math.PI / 180;
+                    const speed = Math.min(Math.hypot(ball.vx, ball.vy) + 0.1, 8);
+                    ball.vx =  Math.cos(angle) * speed;
+                    ball.vy =  Math.sin(angle) * speed;
+                }
+                if (hitPad(ball, ai)) {
+                    ball.x = ai.x - BALL_SIZE/2;
+                    const rel = (ball.y - (ai.y + PAD_H/2)) / (PAD_H/2);
+                    const angle = rel * 60 * Math.PI / 180;
+                    const speed = Math.min(Math.hypot(ball.vx, ball.vy) + 0.1, 8);
+                    ball.vx = -Math.cos(angle) * speed;
+                    ball.vy =  Math.sin(angle) * speed;
+                }
+
+                // Scoring
+                if (ball.x < 0) {
+                    aiScore++;
+                    updateHUD();
+                    if (aiScore >= WIN_SCORE) { state = 'over'; updateHUD(); return; }
+                    ball = resetBall(1);
+                    player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
+                } else if (ball.x > W) {
+                    playerScore++;
+                    updateHUD();
+                    if (playerScore >= WIN_SCORE) { state = 'over'; updateHUD(); return; }
+                    ball = resetBall(-1);
+                    player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
+                }
+            }
+
+            // Pre-render static CRT grid once to an offscreen canvas
+            const offscreen = document.createElement('canvas');
+            offscreen.width = W; offscreen.height = H;
+            const octx = offscreen.getContext('2d');
+            octx.fillStyle = C.bg;
+            octx.fillRect(0, 0, W, H);
+            octx.strokeStyle = C.dim;
+            octx.lineWidth = 0.5;
+            for (let x = 0; x <= W; x += 30) {
+                octx.beginPath(); octx.moveTo(x, 0); octx.lineTo(x, H); octx.stroke();
+            }
+            for (let y = 0; y <= H; y += 30) {
+                octx.beginPath(); octx.moveTo(0, y); octx.lineTo(W, y); octx.stroke();
+            }
+            octx.setLineDash([8, 8]);
+            octx.strokeStyle = C.mid;
+            octx.lineWidth = 2;
+            octx.beginPath(); octx.moveTo(W/2, 0); octx.lineTo(W/2, H); octx.stroke();
+            octx.setLineDash([]);
+
+            function drawCRTBackground() {
+                ctx.drawImage(offscreen, 0, 0);
+            }
+
+            function drawText(text, x, y, size=16, color=C.text, blur=8) {
+                ctx.save();
+                ctx.font = `${size}px 'Share Tech Mono', monospace`;
+                ctx.fillStyle = color;
+                ctx.shadowColor = color;
+                ctx.shadowBlur = blur;
+                // textAlign is 'center' — set once at context init, never changed
+                ctx.fillText(text, x, y);
+                ctx.restore();
+            }
+
+            function draw() {
+                if (state === 'idle') {
+                    // Skip CRT grid — overlay covers it entirely
+                    ctx.fillStyle = 'rgba(0,0,0,0.55)';
+                    ctx.fillRect(0, 0, W, H);
+                    drawText('GR3ASY PONG', W/2, H/2 - 30, 28, C.glow, 20);
+                    drawText(isMobile ? 'TAP TO START' : 'PRESS SPACE TO START', W/2, H/2 + 10, 14, C.text, 8);
+                    drawText(isMobile ? 'DRAG PADDLE OR USE BUTTONS' : 'W / S  TO  MOVE', W/2, H/2 + 36, 11, '#557060', 0);
+                    return;
+                }
+
+                drawCRTBackground();
+
+                // Scores
+                drawText(playerScore, W/4,   50, 40, C.score, 16);
+                drawText(aiScore,     W*3/4, 50, 40, C.score, 16);
+
+                // Paddles
+                drawGlowRect(player.x, player.y, player.w, player.h, C.white, 10);
+                drawGlowRect(ai.x,     ai.y,     ai.w,     ai.h,     C.white, 10);
+
+                // Ball
+                drawBall(ball);
+
+                if (state === 'over') {
+                    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+                    ctx.fillRect(0, 0, W, H);
+                    const won = playerScore >= WIN_SCORE;
+                    drawText(won ? 'YOU WIN' : 'GAME OVER', W/2, H/2 - 28, 32, won ? C.glow : '#ff4466', 22);
+                    drawText(`${playerScore} — ${aiScore}`, W/2, H/2 + 12, 22, C.text, 10);
+                    drawText(isMobile ? 'TAP START TO PLAY AGAIN' : 'PRESS SPACE TO PLAY AGAIN', W/2, H/2 + 44, 12, '#557060', 0);
+                }
+            }
+
+            function loop() {
+                if (!pongOpen) return;
+                if (document.visibilityState !== 'hidden') {
+                    update();
+                    draw();
+                }
+                animId = requestAnimationFrame(loop);
+            }
+
+            if (animId) cancelAnimationFrame(animId);
+            updateHUD(); // populate HUD immediately so scoreDisplay isn't blank
+            loop();
+        }
+    </script>
 </body>
 </html>
