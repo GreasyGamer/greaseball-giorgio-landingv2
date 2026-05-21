@@ -19,12 +19,18 @@
     <meta name="twitter:description" content="this is gr3asy">
     <meta name="twitter:image" content="https://gr3asy.com/preview.png">
 
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
     <link rel="icon" href="/favicon/favicon.ico">
     <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg">
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
     <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
     <link rel="manifest" href="/favicon/site.webmanifest">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet"></noscript>
 
@@ -39,6 +45,11 @@
             scrollbar-color: #333 #000;
         }
 
+        /* Chromium/Safari scrollbar (webkit) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
         body {
             min-height: 100%;
             background: #000;
@@ -48,14 +59,17 @@
             flex-direction: column;
             align-items: center;
             -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         /* ── Stars ── */
         .star {
             position: fixed;
+            top: 0;
             background: white;
             border-radius: 50%;
             pointer-events: none;
+            will-change: transform;
         }
 
         /* ── Hero section ── */
@@ -177,6 +191,10 @@
         }
         .btn:hover .btn-shimmer::before { left:100%; }
         .btn:hover { transform:translateY(-3px); border-color:rgba(255,255,255,0.3); z-index:2; }
+        .btn:focus-visible {
+            outline: 2px solid rgba(255,255,255,0.8);
+            outline-offset: 3px;
+        }
 
         .btn-youtube { background:linear-gradient(135deg,#e55100,#bf360c); box-shadow:0 5px 20px rgba(191,54,12,0.3); }
         .btn-youtube:hover { box-shadow:0 10px 30px rgba(191,54,12,0.5); }
@@ -227,6 +245,10 @@
             border-color: #00ffcc;
             box-shadow: 0 0 12px rgba(0,255,204,0.3);
         }
+        .pong-launch-btn:focus-visible {
+            outline: 2px solid #00ffcc;
+            outline-offset: 3px;
+        }
 
         /* CRT monitor wrapper */
         .crt-monitor {
@@ -254,7 +276,7 @@
             align-items: center;
             font-family: 'Share Tech Mono', monospace;
             font-size: 0.7rem;
-            color: #444;
+            color: #666;
             letter-spacing: 0.1em;
             padding-bottom: 8px;
             border-bottom: 1px solid #1a1a1a;
@@ -276,6 +298,7 @@
             height: auto;
             image-rendering: pixelated;
             border-radius: 4px;
+            touch-action: none;
         }
 
         /* CRT scanline overlay */
@@ -317,7 +340,7 @@
             letter-spacing: 0.08em;
             padding-top: 4px;
         }
-        .pong-hud .hint { color: #333; }
+        .pong-hud .hint { color: #666; }
         #scoreDisplay { color: #00ffcc; font-size: 0.85rem; }
 
         /* ── Touch controls ── */
@@ -400,7 +423,7 @@
 
     <!-- ── Hero ── -->
     <div class="hero">
-        <h1 class="title"></h1>
+        <h1 class="title"><noscript>Gr3asy</noscript></h1>
 
         <div class="btn-row">
             <a href="https://youtube.com/@greaseballgiorgio" target="_blank" rel="noopener noreferrer" class="btn btn-youtube">
@@ -423,25 +446,25 @@
 
     <!-- ── Pong Section ── -->
     <div class="pong-section">
-        <button type="button" class="pong-launch-btn" id="launchBtn" onclick="togglePong()">▶ PLAY PONG</button>
+        <button type="button" class="pong-launch-btn" id="launchBtn" onclick="togglePong()" aria-expanded="false" aria-controls="crtMonitor">▶ PLAY PONG</button>
 
-        <div class="crt-monitor" id="crtMonitor">
+        <div class="crt-monitor" id="crtMonitor" role="region" aria-label="Pong game">
             <div class="monitor-bar">
                 <span><span class="monitor-dot green"></span>GR3ASY_PONG v1.0</span>
                 <span id="monitorStatus">READY</span>
                 <span id="monitorControls">W/S TO MOVE</span>
             </div>
             <div class="canvas-wrap">
-                <canvas id="pongCanvas" width="600" height="360"></canvas>
+                <canvas id="pongCanvas" width="600" height="360">Your browser does not support the HTML5 canvas. Please upgrade to a modern browser to play Pong.</canvas>
             </div>
             <div class="pong-hud">
-                <span id="scoreDisplay"></span>
+                <span id="scoreDisplay" aria-live="polite"></span>
                 <span class="hint" id="gameHint">Press SPACE to start</span>
             </div>
             <div class="touch-controls" id="touchControls">
-                <button class="touch-btn-base touch-btn" id="btnUp">▲</button>
-                <button class="touch-btn-base touch-start-btn" id="btnStart">START</button>
-                <button class="touch-btn-base touch-btn" id="btnDown">▼</button>
+                <button class="touch-btn-base touch-btn" id="btnUp" aria-label="Move paddle up">▲</button>
+                <button class="touch-btn-base touch-start-btn" id="btnStart" aria-label="Start game">START</button>
+                <button class="touch-btn-base touch-btn" id="btnDown" aria-label="Move paddle down">▼</button>
             </div>
         </div>
     </div>
@@ -451,16 +474,11 @@
     <script>
         /* ───────── Typing effect ───────── */
         (function() {
-            const titleEl = document.querySelector('.title');
-            const word    = 'Gr3asy';
+            const titleEl    = document.querySelector('.title');
+            const word       = 'Gr3asy';
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-            // Skip animation entirely for users who prefer reduced motion
-            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                titleEl.textContent = word;
-                titleEl.classList.add('typed');
-                return;
-            }
-
+            // Always type the word — only skip the blinking cursor if reduced motion is on
             titleEl.textContent = '';
             let i = 0;
 
@@ -469,7 +487,9 @@
 
             function type() {
                 titleEl.textContent = word.slice(0, ++i);
-                titleEl.appendChild(cursor);
+                // Re-appending the same cursor element moves it to end of titleEl
+                // (DOM move, not a clone) — this is intentional, not a bug.
+                if (!reducedMotion) titleEl.appendChild(cursor);
                 if (i < word.length) {
                     setTimeout(type, 120);
                 } else {
@@ -495,25 +515,43 @@
             const star = document.createElement('div');
             const size = Math.random() * 3 + 1;
             star.className = 'star';
-            star.style.cssText = `left:${Math.random() * cachedVW}px;top:-5px;width:${size}px;height:${size}px;opacity:${(Math.random() * 0.8 + 0.2).toFixed(2)};`;
+            // top:0 is set in CSS; translateY drives position — compositor only, no layout
+            star.style.cssText = `left:${Math.random() * cachedVW}px;width:${size}px;height:${size}px;opacity:${(Math.random() * 0.8 + 0.2).toFixed(2)};`;
             document.body.appendChild(star);
             let pos = -5;
             const speed = Math.random() * 3 + 1;
             function move() {
                 pos += speed;
-                star.style.top = pos + 'px';
+                star.style.transform = `translateY(${pos}px)`;
                 if (pos < cachedVH + 10) requestAnimationFrame(move);
                 else star.remove();
             }
             move();
         }
-        setInterval(createStar, 200);
+        let _starInterval = setInterval(createStar, 200);
+        document.addEventListener('visibilitychange', () => {
+            // Stars already skip creation when hidden; pause the interval
+            // itself so it doesn't fire at all on long-hidden tabs.
+            if (document.visibilityState === 'hidden') {
+                clearInterval(_starInterval);
+            } else {
+                _starInterval = setInterval(createStar, 200);
+                // Restart the pong loop if it was halted by the hidden-tab gate
+                if (_pong.resume) _pong.resume();
+            }
+        });
         for (let i = 0; i < 20; i++) setTimeout(createStar, i * 100);
 
         /* ───────── Pong state (declared early so easter egg can reference pongOpen) ───────── */
         let pongOpen = false;
         let animId   = null;
-        const _pong  = { keys: {}, state: 'idle', startGame: null, player: null };
+        const _pong  = { keys: {}, state: 'idle', startGame: null, player: null, resume: null, padH: 70 };
+
+        // Module-scope mobile detection — shared across initPong cycles so the
+        // matchMedia listener always updates the same variable.
+        const _mobileQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
+        let _isMobile = _mobileQuery.matches;
+        _mobileQuery.addEventListener('change', e => { _isMobile = e.matches; });
 
         /* ───────── PAINKILLER easter egg ───────── */
         (function() {
@@ -571,14 +609,13 @@
                     setTimeout(() => bar.remove(), 80);
                 }, 50);
 
-                // Stop after 3 seconds, reset cleanly on a frame boundary
+                // Stop after 3 seconds — reset synchronously so styles clear even
+                // if the tab was hidden when the timeout fires (rAF won't run then).
                 eggTimeout = setTimeout(() => {
                     clearInterval(flashInterval);
-                    requestAnimationFrame(() => {
-                        body.style.filter    = '';
-                        body.style.transform = '';
-                        eggActive = false;
-                    });
+                    body.style.filter    = '';
+                    body.style.transform = '';
+                    eggActive = false;
                 }, 3000);
             }
         })();
@@ -612,6 +649,7 @@
             pongOpen = !pongOpen;
             const monitor = document.getElementById('crtMonitor');
             const btn     = document.getElementById('launchBtn');
+            btn.setAttribute('aria-expanded', pongOpen ? 'true' : 'false');
             if (pongOpen) {
                 monitor.classList.add('visible');
                 btn.textContent = '▼ CLOSE PONG';
@@ -663,9 +701,9 @@
             canvas.addEventListener('touchmove', e => {
                 e.preventDefault();
                 if (!touchActive || _pong.state !== 'playing' || !_pong.player) return;
-                const rect  = canvas.getBoundingClientRect();
+                const rect   = canvas.getBoundingClientRect();
                 const touchY = (e.touches[0].clientY - rect.top) * (H_REF / rect.height);
-                const PAD_H  = 70;
+                const PAD_H  = _pong.padH; // sourced from initPong via _pong to stay in sync
                 _pong.player.y = Math.max(0, Math.min(H_REF - PAD_H, touchY - PAD_H / 2));
             }, { passive: false });
             canvas.addEventListener('touchend', () => { touchActive = false; });
@@ -681,6 +719,12 @@
             const PAD_W = 10, PAD_H = 70, PAD_SPEED = 5;
             const BALL_SIZE = 8;
             const WIN_SCORE = 7;
+            _pong.padH = PAD_H; // keep touch listener in sync with game constant
+
+            // Always start fresh — prevents stale state if pong was closed mid-game
+            let state = 'idle';
+            function setState(s) { state = s; _pong.state = s; }
+            setState('idle');
 
             const C = {
                 bg:    '#050e09',
@@ -692,26 +736,22 @@
                 score: '#00ffcc',
             };
 
-            // Cache mobile detection; listener updates it if device changes
-            const mobileQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
-            let isMobile = mobileQuery.matches;
-            if (!mobileQuery._pongListenerAttached) {
-                mobileQuery._pongListenerAttached = true;
-                mobileQuery.addEventListener('change', e => { isMobile = e.matches; });
-            }
+            // Use module-scope _isMobile (updated by a single matchMedia listener)
+            // so the value stays correct across open/close cycles.
+            const isMobile = _isMobile;
 
             // Update monitor bar hint to match control scheme
             document.getElementById('monitorControls').textContent = isMobile ? 'DRAG TO MOVE' : 'W/S TO MOVE';
 
-            let state = 'idle';
             let playerScore = 0, aiScore = 0;
 
             let player = { x: 20, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
             let ai     = { x: W - 20 - PAD_W, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
 
             // Keep shared ref up to date so listeners always see current values
-            _pong.state  = state;
             _pong.player = player;
+
+            const MAX_VX = PAD_W - BALL_SIZE / 2; // ball can't skip past a paddle in one frame
 
             function resetBall(dir = 1) {
                 const angle = (Math.random() * 60 - 30) * Math.PI / 180;
@@ -726,8 +766,7 @@
                 player.y = H/2 - PAD_H/2;
                 ai.y     = H/2 - PAD_H/2;
                 ball  = resetBall(Math.random() > 0.5 ? 1 : -1);
-                state = 'playing';
-                _pong.state = state;
+                setState('playing');
                 newAiError();
                 updateHUD();
             }
@@ -757,18 +796,18 @@
             }
 
             function drawBall(b) {
-                // Trail
-                b.trail.forEach((t, i) => {
-                    const alpha = (i / b.trail.length) * 0.4;
-                    ctx.save();
-                    ctx.globalAlpha = alpha;
-                    ctx.shadowColor = C.glow;
+                // Trail — save/restore once outside the loop instead of per-dot
+                ctx.save();
+                ctx.shadowColor = C.glow;
+                ctx.fillStyle   = C.glow;
+                for (let i = 0; i < b.trail.length; i++) {
+                    const t = b.trail[i];
+                    ctx.globalAlpha = (i / b.trail.length) * 0.4;
                     ctx.shadowBlur  = 6;
-                    ctx.fillStyle   = C.glow;
                     const s = BALL_SIZE * (i / b.trail.length);
                     ctx.fillRect(t.x - s/2, t.y - s/2, s, s);
-                    ctx.restore();
-                });
+                }
+                ctx.restore();
                 drawGlowRect(b.x - BALL_SIZE/2, b.y - BALL_SIZE/2, BALL_SIZE, BALL_SIZE, C.glow, 14);
             }
 
@@ -820,7 +859,7 @@
                     const rel = (ball.y - (player.y + PAD_H/2)) / (PAD_H/2);
                     const angle = rel * 60 * Math.PI / 180;
                     const speed = Math.min(Math.hypot(ball.vx, ball.vy) + 0.1, 8);
-                    ball.vx =  Math.cos(angle) * speed;
+                    ball.vx = Math.min( Math.cos(angle) * speed, MAX_VX);
                     ball.vy =  Math.sin(angle) * speed;
                 }
                 if (hitPad(ball, ai)) {
@@ -828,7 +867,7 @@
                     const rel = (ball.y - (ai.y + PAD_H/2)) / (PAD_H/2);
                     const angle = rel * 60 * Math.PI / 180;
                     const speed = Math.min(Math.hypot(ball.vx, ball.vy) + 0.1, 8);
-                    ball.vx = -Math.cos(angle) * speed;
+                    ball.vx = -Math.min(Math.cos(angle) * speed, MAX_VX);
                     ball.vy =  Math.sin(angle) * speed;
                 }
 
@@ -836,13 +875,13 @@
                 if (ball.x < 0) {
                     aiScore++;
                     updateHUD();
-                    if (aiScore >= WIN_SCORE) { state = 'over'; _pong.state = state; updateHUD(); return; }
+                    if (aiScore >= WIN_SCORE) { setState('over'); updateHUD(); return; }
                     ball = resetBall(1);  newAiError();
                     player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
                 } else if (ball.x > W) {
                     playerScore++;
                     updateHUD();
-                    if (playerScore >= WIN_SCORE) { state = 'over'; _pong.state = state; updateHUD(); return; }
+                    if (playerScore >= WIN_SCORE) { setState('over'); updateHUD(); return; }
                     ball = resetBall(-1); newAiError();
                     player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
                 }
@@ -899,12 +938,21 @@
 
             function loop() {
                 if (!pongOpen) return;
+                animId = null; // clear before rescheduling so stale-cancel checks are reliable
                 if (document.visibilityState !== 'hidden') {
                     update();
                     draw();
+                    animId = requestAnimationFrame(loop);
                 }
-                animId = requestAnimationFrame(loop);
+                // When hidden, rAF is not rescheduled; _pong.resume restarts it on tab restore
             }
+
+            // Expose resume so the visibilitychange handler can restart the loop
+            _pong.resume = function() {
+                if (pongOpen && !animId) {
+                    animId = requestAnimationFrame(loop);
+                }
+            };
 
             if (animId) cancelAnimationFrame(animId);
             updateHUD(); // populate HUD immediately so scoreDisplay isn't blank
