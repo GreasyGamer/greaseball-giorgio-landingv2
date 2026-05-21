@@ -47,7 +47,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
             -webkit-text-size-adjust: 100%;
         }
 
@@ -87,7 +86,7 @@
         }
 
         .title::before, .title::after {
-            content: 'Grease';
+            content: 'Gr3asy';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             opacity: 0;
             transition: opacity 0.3s;
@@ -140,8 +139,20 @@
             1%,13%{transform:translate(2px,-2px);}16%,48%{transform:translate(-2px,2px);}51%,98%{transform:translate(1px,-1px);}
         }
 
-        /* Typing cursor — toggled via JS class */
-        .title-cursor { border-right: 3px solid #fff; }
+        /* Typing cursor */
+        #typingCursor {
+            display: inline-block;
+            width: 3px;
+            height: 0.8em;
+            background: #fff;
+            margin-left: 3px;
+            vertical-align: middle;
+            animation: blink 0.8s step-end infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0; }
+        }
 
         /* ── Buttons ── */
         .btn-row { display:flex; flex-direction:column; align-items:center; gap:14px; }
@@ -389,7 +400,7 @@
 
     <!-- ── Hero ── -->
     <div class="hero">
-        <h1 class="title">Grease</h1>
+        <h1 class="title"></h1>
 
         <div class="btn-row">
             <a href="https://youtube.com/@greaseballgiorgio" target="_blank" rel="noopener noreferrer" class="btn btn-youtube">
@@ -418,7 +429,7 @@
             <div class="monitor-bar">
                 <span><span class="monitor-dot green"></span>GR3ASY_PONG v1.0</span>
                 <span id="monitorStatus">READY</span>
-                <span>W/S TO MOVE</span>
+                <span id="monitorControls">W/S TO MOVE</span>
             </div>
             <div class="canvas-wrap">
                 <canvas id="pongCanvas" width="600" height="360"></canvas>
@@ -441,20 +452,29 @@
         /* ───────── Typing effect ───────── */
         (function() {
             const titleEl = document.querySelector('.title');
-            const word = 'Grease';
+            const word    = 'Gr3asy';
+
+            // Skip animation entirely for users who prefer reduced motion
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                titleEl.textContent = word;
+                titleEl.classList.add('typed');
+                return;
+            }
+
             titleEl.textContent = '';
             let i = 0;
-            // blinking cursor while typing
-            titleEl.classList.add('title-cursor');
+
+            const cursor = document.createElement('span');
+            cursor.id = 'typingCursor';
+
             function type() {
-                if (i <= word.length) {
-                    titleEl.textContent = word.slice(0, i);
-                    i++;
-                    setTimeout(type, i === 1 ? 400 : 120);
+                titleEl.textContent = word.slice(0, ++i);
+                titleEl.appendChild(cursor);
+                if (i < word.length) {
+                    setTimeout(type, 120);
                 } else {
-                    // done typing — remove cursor, enable glitch pseudos
                     setTimeout(() => {
-                        titleEl.classList.remove('title-cursor');
+                        cursor.remove();
                         titleEl.classList.add('typed');
                     }, 500);
                 }
@@ -487,8 +507,13 @@
             }
             move();
         }
-        const _starInterval = setInterval(createStar, 200);
+        setInterval(createStar, 200);
         for (let i = 0; i < 20; i++) setTimeout(createStar, i * 100);
+
+        /* ───────── Pong state (declared early so easter egg can reference pongOpen) ───────── */
+        let pongOpen = false;
+        let animId   = null;
+        const _pong  = { keys: {}, state: 'idle', startGame: null, player: null };
 
         /* ───────── PAINKILLER easter egg ───────── */
         (function() {
@@ -499,13 +524,14 @@
             let flashInterval = null;
 
             document.addEventListener('keydown', e => {
-                if (e.key.length !== 1) return;
+                if (e.key.length !== 1 || pongOpen) return;
                 buffer = (buffer + e.key.toUpperCase()).slice(-CODE.length);
                 if (buffer === CODE) triggerEgg();
             });
 
             function triggerEgg() {
                 if (eggActive) return;
+                if (pongOpen) return; // don't wreck the canvas game
                 eggActive = true;
                 buffer = '';
 
@@ -519,11 +545,11 @@
 
                 // Chaos: rapid hue-rotate + shake on body
                 const body = document.body;
-                body.style.transition = 'filter 0.05s';
                 let tick = 0;
                 const colors = ['#ff00ff','#00ffff','#ffff00','#ff0044','#00ff88'];
 
                 flashInterval = setInterval(() => {
+                    if (document.visibilityState === 'hidden') return;
                     tick++;
                     const hue = (tick * 37) % 360;
                     body.style.filter = `hue-rotate(${hue}deg) brightness(${1 + Math.random()}) contrast(${1 + Math.random() * 0.5})`;
@@ -545,27 +571,47 @@
                     setTimeout(() => bar.remove(), 80);
                 }, 50);
 
-                // Stop after 3 seconds, reset cleanly
+                // Stop after 3 seconds, reset cleanly on a frame boundary
                 eggTimeout = setTimeout(() => {
                     clearInterval(flashInterval);
-                    body.style.filter = '';
-                    body.style.transform = '';
-                    body.style.transition = '';
-                    eggActive = false;
+                    requestAnimationFrame(() => {
+                        body.style.filter    = '';
+                        body.style.transform = '';
+                        eggActive = false;
+                    });
                 }, 3000);
             }
         })();
 
         /* ───────── Pong ───────── */
-        let pongOpen = false;
-        let animId = null;
+        // Offscreen canvas for the static CRT grid — built once, reused every frame
+        const _offscreen = document.createElement('canvas');
+        _offscreen.width  = 600;
+        _offscreen.height = 360;
+        (function buildGrid() {
+            const C = { bg: '#050e09', dim: '#0a1a10', mid: '#1a4030' };
+            const W = 600, H = 360;
+            const oc = _offscreen.getContext('2d');
+            oc.fillStyle = C.bg;
+            oc.fillRect(0, 0, W, H);
+            oc.strokeStyle = C.dim;
+            oc.lineWidth = 0.5;
+            for (let x = 0; x <= W; x += 30) { oc.beginPath(); oc.moveTo(x, 0); oc.lineTo(x, H); oc.stroke(); }
+            for (let y = 0; y <= H; y += 30) { oc.beginPath(); oc.moveTo(0, y); oc.lineTo(W, y); oc.stroke(); }
+            oc.setLineDash([8, 8]);
+            oc.strokeStyle = C.mid;
+            oc.lineWidth = 2;
+            oc.beginPath(); oc.moveTo(W/2, 0); oc.lineTo(W/2, H); oc.stroke();
+            oc.setLineDash([]);
+        })();
 
-        let pongListenersRegistered = false;
+        // Shared ref object — listeners are registered once but always read
+        // the live game state through this, so there's no stale closure issue.
 
         function togglePong() {
             pongOpen = !pongOpen;
             const monitor = document.getElementById('crtMonitor');
-            const btn = document.getElementById('launchBtn');
+            const btn     = document.getElementById('launchBtn');
             if (pongOpen) {
                 monitor.classList.add('visible');
                 btn.textContent = '▼ CLOSE PONG';
@@ -577,22 +623,65 @@
             }
         }
 
+        // Listeners registered exactly once at page load — they read _pong live
+        (function registerPongListeners() {
+            const btnUp    = document.getElementById('btnUp');
+            const btnDown  = document.getElementById('btnDown');
+            const btnStart = document.getElementById('btnStart');
+
+            document.addEventListener('keydown', e => {
+                if (!pongOpen) return;
+                _pong.keys[e.key] = true;
+                if (e.key === ' ') {
+                    e.preventDefault();
+                    if ((_pong.state === 'idle' || _pong.state === 'over') && _pong.startGame) _pong.startGame();
+                }
+            });
+            document.addEventListener('keyup', e => {
+                if (!pongOpen) return;
+                _pong.keys[e.key] = false;
+            });
+
+            ['touchstart','mousedown'].forEach(ev => {
+                btnUp.addEventListener(ev,   e => { e.preventDefault(); _pong.keys['ArrowUp']   = true;  btnUp.classList.add('pressed'); },   { passive: false });
+                btnDown.addEventListener(ev, e => { e.preventDefault(); _pong.keys['ArrowDown'] = true;  btnDown.classList.add('pressed'); }, { passive: false });
+            });
+            ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev => {
+                btnUp.addEventListener(ev,   () => { _pong.keys['ArrowUp']   = false; btnUp.classList.remove('pressed'); });
+                btnDown.addEventListener(ev, () => { _pong.keys['ArrowDown'] = false; btnDown.classList.remove('pressed'); });
+            });
+            btnStart.addEventListener('touchstart', e => { e.preventDefault(); if ((_pong.state === 'idle' || _pong.state === 'over') && _pong.startGame) _pong.startGame(); }, { passive: false });
+            btnStart.addEventListener('click', () => { if ((_pong.state === 'idle' || _pong.state === 'over') && _pong.startGame) _pong.startGame(); });
+
+            let touchActive = false;
+            const canvas = document.getElementById('pongCanvas');
+            const H_REF  = 360; // matches canvas height constant
+            canvas.addEventListener('touchstart', e => {
+                e.preventDefault(); touchActive = true;
+                if ((_pong.state === 'idle' || _pong.state === 'over') && _pong.startGame) _pong.startGame();
+            }, { passive: false });
+            canvas.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (!touchActive || _pong.state !== 'playing' || !_pong.player) return;
+                const rect  = canvas.getBoundingClientRect();
+                const touchY = (e.touches[0].clientY - rect.top) * (H_REF / rect.height);
+                const PAD_H  = 70;
+                _pong.player.y = Math.max(0, Math.min(H_REF - PAD_H, touchY - PAD_H / 2));
+            }, { passive: false });
+            canvas.addEventListener('touchend', () => { touchActive = false; });
+        })();
+
         function initPong() {
             const canvas = document.getElementById('pongCanvas');
-            // keys declared at initPong scope so update() always sees the live object
-            // (pongListenersRegistered guard below means listeners are only attached once,
-            //  but they close over this same `keys` reference every time)
-            if (!window._pongKeys) window._pongKeys = {};
-            const keys = window._pongKeys;
-            const ctx = canvas.getContext('2d');
-            ctx.textAlign = 'center'; // set once; drawText never changes it
+            const keys   = _pong.keys;
+            const ctx    = canvas.getContext('2d');
+            ctx.textAlign = 'center';
 
             const W = 600, H = 360;
             const PAD_W = 10, PAD_H = 70, PAD_SPEED = 5;
             const BALL_SIZE = 8;
             const WIN_SCORE = 7;
 
-            // Phosphor green palette
             const C = {
                 bg:    '#050e09',
                 dim:   '#0a1a10',
@@ -600,10 +689,10 @@
                 white: '#ccffe8',
                 mid:   '#1a4030',
                 text:  '#00ffcc',
+                score: '#00ffcc',
             };
-            C.score = C.text;
 
-            // Cache mobile detection; only attach the change listener once
+            // Cache mobile detection; listener updates it if device changes
             const mobileQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
             let isMobile = mobileQuery.matches;
             if (!mobileQuery._pongListenerAttached) {
@@ -611,84 +700,40 @@
                 mobileQuery.addEventListener('change', e => { isMobile = e.matches; });
             }
 
-            let state = 'idle'; // idle | playing | paused | over
+            // Update monitor bar hint to match control scheme
+            document.getElementById('monitorControls').textContent = isMobile ? 'DRAG TO MOVE' : 'W/S TO MOVE';
+
+            let state = 'idle';
             let playerScore = 0, aiScore = 0;
 
             let player = { x: 20, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
             let ai     = { x: W - 20 - PAD_W, y: H/2 - PAD_H/2, w: PAD_W, h: PAD_H };
 
+            // Keep shared ref up to date so listeners always see current values
+            _pong.state  = state;
+            _pong.player = player;
+
             function resetBall(dir = 1) {
                 const angle = (Math.random() * 60 - 30) * Math.PI / 180;
                 const speed = 3.0;
-                return {
-                    x: W/2, y: H/2,
-                    vx: Math.cos(angle) * speed * dir,
-                    vy: Math.sin(angle) * speed,
-                    trail: []
-                };
+                return { x: W/2, y: H/2, vx: Math.cos(angle) * speed * dir, vy: Math.sin(angle) * speed, trail: [] };
             }
 
             let ball = resetBall();
-
-            // Input — keys at initPong scope so update() always sees the live object
-            if (!pongListenersRegistered) {
-                pongListenersRegistered = true;
-
-            document.addEventListener('keydown', e => {
-                keys[e.key] = true;
-                if (e.key === ' ') {
-                    e.preventDefault();
-                    if (state === 'idle' || state === 'over') startGame();
-                }
-            });
-            document.addEventListener('keyup', e => { keys[e.key] = false; });
-
-            // Touch button controls
-            const btnUp   = document.getElementById('btnUp');
-            const btnDown = document.getElementById('btnDown');
-            const btnStart = document.getElementById('btnStart');
-
-            function holdStart(key) { keys[key] = true; }
-            function holdEnd(key)   { keys[key] = false; }
-
-            ['touchstart','mousedown'].forEach(ev => {
-                btnUp.addEventListener(ev,   e => { e.preventDefault(); holdStart('ArrowUp');   btnUp.classList.add('pressed'); },   { passive: false });
-                btnDown.addEventListener(ev, e => { e.preventDefault(); holdStart('ArrowDown'); btnDown.classList.add('pressed'); }, { passive: false });
-            });
-            ['touchend','touchcancel','mouseup','mouseleave'].forEach(ev => {
-                btnUp.addEventListener(ev,   () => { holdEnd('ArrowUp');   btnUp.classList.remove('pressed'); });
-                btnDown.addEventListener(ev, () => { holdEnd('ArrowDown'); btnDown.classList.remove('pressed'); });
-            });
-            btnStart.addEventListener('touchstart', e => { e.preventDefault(); if (state === 'idle' || state === 'over') startGame(); }, { passive: false });
-            btnStart.addEventListener('click', () => { if (state === 'idle' || state === 'over') startGame(); });
-
-            // Canvas touch-drag: drag finger to move paddle
-            let touchActive = false;
-            canvas.addEventListener('touchstart', e => {
-                e.preventDefault();
-                touchActive = true;
-                if (state === 'idle' || state === 'over') startGame();
-            }, { passive: false });
-            canvas.addEventListener('touchmove', e => {
-                e.preventDefault();
-                if (!touchActive || state !== 'playing') return;
-                const rect = canvas.getBoundingClientRect();
-                const scaleY = H / rect.height;
-                const touchY = (e.touches[0].clientY - rect.top) * scaleY;
-                player.y = Math.max(0, Math.min(H - PAD_H, touchY - PAD_H / 2));
-            }, { passive: false });
-            canvas.addEventListener('touchend', () => { touchActive = false; });
-
-            } // end pongListenersRegistered
 
             function startGame() {
                 playerScore = 0; aiScore = 0;
                 player.y = H/2 - PAD_H/2;
                 ai.y     = H/2 - PAD_H/2;
-                ball = resetBall(Math.random() > 0.5 ? 1 : -1);
+                ball  = resetBall(Math.random() > 0.5 ? 1 : -1);
                 state = 'playing';
+                _pong.state = state;
+                newAiError();
                 updateHUD();
             }
+
+            // Assigned after declaration so there's no hoisting ambiguity
+            _pong.startGame = startGame;
 
             // Cache HUD refs once — updateHUD is called on every score event
             const _hudScore  = document.getElementById('scoreDisplay');
@@ -734,9 +779,11 @@
                        b.y > pad.y && b.y < pad.y + pad.h;
             }
 
-            // AI difficulty: track ball with lag + small error
-            let aiTarget = H/2;
+            let aiTarget   = H / 2;
+            let aiError    = 0; // picked once per rally, not per frame
             const AI_SPEED = 2.8;
+
+            function newAiError() { aiError = (Math.random() - 0.5) * 20; }
 
             function update() {
                 if (state !== 'playing') return;
@@ -745,9 +792,9 @@
                 if ((keys['w'] || keys['W'] || keys['ArrowUp'])    && player.y > 2)          player.y -= PAD_SPEED;
                 if ((keys['s'] || keys['S'] || keys['ArrowDown'])  && player.y < H - PAD_H - 2) player.y += PAD_SPEED;
 
-                // AI tracking
+                // AI tracking — error offset is stable per rally, not re-rolled every frame
                 if (ball.vx > 0) {
-                    aiTarget = ball.y - PAD_H / 2 + (Math.random() - 0.5) * 20;
+                    aiTarget = ball.y - PAD_H / 2 + aiError;
                 } else {
                     aiTarget = H/2 - PAD_H/2;
                 }
@@ -789,40 +836,20 @@
                 if (ball.x < 0) {
                     aiScore++;
                     updateHUD();
-                    if (aiScore >= WIN_SCORE) { state = 'over'; updateHUD(); return; }
-                    ball = resetBall(1);
+                    if (aiScore >= WIN_SCORE) { state = 'over'; _pong.state = state; updateHUD(); return; }
+                    ball = resetBall(1);  newAiError();
                     player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
                 } else if (ball.x > W) {
                     playerScore++;
                     updateHUD();
-                    if (playerScore >= WIN_SCORE) { state = 'over'; updateHUD(); return; }
-                    ball = resetBall(-1);
+                    if (playerScore >= WIN_SCORE) { state = 'over'; _pong.state = state; updateHUD(); return; }
+                    ball = resetBall(-1); newAiError();
                     player.y = H/2 - PAD_H/2; ai.y = H/2 - PAD_H/2;
                 }
             }
 
-            // Pre-render static CRT grid once to an offscreen canvas
-            const offscreen = document.createElement('canvas');
-            offscreen.width = W; offscreen.height = H;
-            const octx = offscreen.getContext('2d');
-            octx.fillStyle = C.bg;
-            octx.fillRect(0, 0, W, H);
-            octx.strokeStyle = C.dim;
-            octx.lineWidth = 0.5;
-            for (let x = 0; x <= W; x += 30) {
-                octx.beginPath(); octx.moveTo(x, 0); octx.lineTo(x, H); octx.stroke();
-            }
-            for (let y = 0; y <= H; y += 30) {
-                octx.beginPath(); octx.moveTo(0, y); octx.lineTo(W, y); octx.stroke();
-            }
-            octx.setLineDash([8, 8]);
-            octx.strokeStyle = C.mid;
-            octx.lineWidth = 2;
-            octx.beginPath(); octx.moveTo(W/2, 0); octx.lineTo(W/2, H); octx.stroke();
-            octx.setLineDash([]);
-
             function drawCRTBackground() {
-                ctx.drawImage(offscreen, 0, 0);
+                ctx.drawImage(_offscreen, 0, 0);
             }
 
             function drawText(text, x, y, size=16, color=C.text, blur=8) {
